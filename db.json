@@ -1,0 +1,67 @@
+{
+  "customer": [
+    {
+      "id": 1,
+      "customer_id": "1",
+      "customer_name": "fred mata",
+      "customer_loc": "ikoy",
+      "drops_loc": "ikeja",
+      "job_date": "2022-02-23 12:30:00",
+      "job_placed": true
+    },
+    {
+      "id": 2,
+      "customer_id": "2",
+      "customer_name": "Guy Tegi",
+      "customer_loc": "Yaba",
+      "drops_loc": "egbeda",
+      "job_date": "2022-02-16 12:30:00",
+      "job_placed": false
+    },
+    {
+      "customer_id": "4",
+      "customer_name": "Lope Lope",
+      "customer_loc": "ikotun",
+      "drops_loc": "ojo",
+      "job_date": "2022-01-12",
+      "job_placed": true,
+      "id": 4
+    },
+    {
+      "customer_id": "5",
+      "customer_name": "Lorin Kole",
+      "customer_loc": "ikoyi",
+      "drops_loc": "ojoti",
+      "job_date": "2022-02-28",
+      "job_placed": true,
+      "id": 5
+    },
+    {
+      "customer_id": "6",
+      "customer_name": "Ore Bobo",
+      "customer_loc": "lasu",
+      "drops_loc": "yaba",
+      "job_date": "2022-02-28",
+      "job_placed": false,
+      "id": 6
+    },
+    {
+      "customer_id": "12",
+      "customer_name": "robert jerkins",
+      "customer_loc": "yaba",
+      "drops_loc": "illorin",
+      "job_date": "2022-03-07",
+      "job_placed": false,
+      "id": 8
+    },
+    {
+      "customer_id": "15",
+      "customer_name": "troll bu",
+      "customer_loc": "yaba",
+      "drops_loc": "okoko",
+      "job_date": "2022-03-07",
+      "job_placed": false,
+      "id": 9
+    }
+  ]
+}

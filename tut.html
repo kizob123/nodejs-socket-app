@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tut</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="banner">Yip Job</div>
+    <div class="content">
+        <div class="left" id="left">
+        
+       
+    </div>
+    <div class="right">
+            <div id="date-job"></div>
+            <div id="toast"></div>
+    </div>
+    
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>  
+        let obj={};
+        var socket = io();
+        socket.on('sent',(msg)=>{
+            document.getElementById('toast').append(msg+' ')//mmmh(?) i will tell dem
+        })
+        function fun(){
+            socket.emit('test','hello');
+        }
+        function dropped(event){
+            event.preventDefault();
+           
+            if(dragsit!==this){
+                dragsit.innerHTML=this.innerHTML;
+                
+            }
+            document.getElementById(event.target.id).innerHTML=document.getElementById(event.dataTransfer.getData('source')).children[0].innerHTML+'<br>';
+            document.getElementById(event.target.id).append(document.getElementById(event.dataTransfer.getData('source')).children[2].innerHTML);
+            
+            document.getElementById(event.dataTransfer.getData('source')).style.display="none";
+         var name =  document.getElementById(event.dataTransfer.getData('source')).children[0].innerHTML;
+         var ID =   document.getElementById(event.dataTransfer.getData('source')).children[1].innerHTML.slice(13).trim();
+         var loc =   document.getElementById(event.dataTransfer.getData('source')).children[2].innerHTML.slice(19).trim();
+         var drop =   document.getElementById(event.dataTransfer.getData('source')).children[3].innerHTML.slice(11).trim();
+          var day = document.getElementById(event.dataTransfer.getData('source')).children[4].innerHTML.slice(14).trim();
+         var date = new Date();
+         var date_to = new Date(date)
+         date_to.setDate(date_to.getDate()+parseInt(event.target.id.slice(5))-1);
+         //console.log(date_to.getDate()+parseInt(event.target.id.slice(5))-1,'o')
+         
+        updateJson(obj['x'+ID]);
+          socket.emit('test2',{'name':name,'ID':ID,'loc':loc,'drop':drop,'day':date_to});
+
+
+          return false;
+        }
+        function allowDrop(event){
+            event.preventDefault();
+        }
+        function dragstart(event){
+            dragsit= this;
+            event.dataTransfer.effectAllowed='move';
+            var el = event.target.id;
+            event.dataTransfer.setData("data",document.getElementById(el).innerHTML);
+            event.dataTransfer.setData("source",el);
+            
+        }
+        (async()=>{
+            try{
+                const res = await fetch('http://localhost:9000/customer/?job_placed=false');
+                const out = await res.json();
+                
+                let n =0;
+            while(out[n]!==undefined){
+                let div1=document.createElement('div');
+                div1.setAttribute('id','name');
+                div1.innerHTML=out[n].customer_name;
+
+                let div2=document.createElement('div');
+                div2.setAttribute('id','ID');
+                div2.setAttribute('class','det');
+                div2.innerHTML='Customer ID: '+out[n].customer_id;
+
+                let div3=document.createElement('div');
+                div3.setAttribute('id','location');
+                div3.setAttribute('class','det');
+                div3.innerHTML='Customer Location: '+out[n].customer_loc;
+                
+                let div4=document.createElement('div');
+                div4.setAttribute('id','drop');
+                div4.setAttribute('class','det');
+                div4.innerHTML='Drop Point: '+out[n].drops_loc;
+
+                let div5=document.createElement('div');
+                div5.setAttribute('id','day');
+                div5.setAttribute('class','det');
+                div5.innerHTML='Day and Time: '+out[n].job_date;
+                
+               obj['x'+out[n].customer_id]=out[n].id;
+                let div6=document.createElement('div');
+                div6.setAttribute('id','draws'+n);
+                div6.setAttribute('class','box');
+                div6.setAttribute('draggable',"true");
+                div6.setAttribute('ondragstart',"dragstart(event)");
+                div6.appendChild(div1)
+                div6.appendChild(div2)
+                div6.appendChild(div3)
+                div6.appendChild(div4)
+                div6.appendChild(div5)
+                document.getElementById('left').append(div6)
+                    n=n+1;
+            }
+            }catch(err){
+                    throw err
+            }
+        })()
+        populate()
+        function populate(){
+            var div =[]
+        for(let i =0;i<7;i++){
+            div[i]=document.createElement('div');
+            div[i].setAttribute('id','dates'+i);
+            div[i].setAttribute('class','dates');
+            div[i].setAttribute('ondrop','dropped(event)');
+            div[i].setAttribute('ondragover','allowDrop(event)');
+            if(i===0)
+            div[i].innerHTML="TODAY"
+            else
+             div[i].innerHTML="DAY "+(i+1)
+            document.getElementById('date-job').append(div[i])
+        }
+    }
+
+        function updateJson(id){
+            fetch('http://localhost:9000/customer/'+id,{
+                    method: 'PATCH',
+                    body:JSON.stringify({
+                        job_placed:true
+                    }),
+                    headers:{
+                        'Content-type':'application/json; charset=UTF-8'
+                    }
+                }).then(res=>{
+                    if(res.ok){
+                        return res.json()
+                    }
+                    return Promise.reject(res)
+                }).then((data)=>console.log(data))
+                .catch((err)=>console.log(err))
+        }
+        
+    </script>
+</body>
+</html>

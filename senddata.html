@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>customer data</title>
+</head>
+<body>
+    <h3>Please Place Your Delivery Details</h3>
+    <p>A pickup will find you</p>
+    <form id="myform">
+        <input type="number" name="customer_id"  placeholder="customer ID"><br>
+        <input type="text" name="customer_name" id="name" placeholder="customer name"><br>
+        <input type="text" name="customer_loc" id="location" placeholder="customer location"><br>
+        <input type="text" name="drops_loc" id="drop_point" placeholder="drop point"><br>
+        <input type="date" name="job_date" id="day" >
+        <input type="submit">
+    </form>
+    <script>
+        
+       window.addEventListener("load",function(event){
+        const form =document.getElementById("myform");
+        var formdata = new FormData(form);
+         obj ={}
+            form.addEventListener('submit',function(event){
+                event.preventDefault();
+                
+                for(var p of formdata.entries()){
+                    obj[''+p[0]]=''+p[1]
+                    
+                }
+                obj.job_placed=false
+                console.log(obj)
+                  fetch('http://localhost:9000/customer',{
+                    method: 'POST',
+                    body:JSON.stringify(obj),
+                    headers:{
+                        'Content-type':'application/json; charset=UTF-8'
+                    }
+                }).then(res=>{
+                    if(res.ok){
+                        return res.json()
+                    }
+                    return Promise.reject(res)
+                }).then((data)=>console.log(data))
+                .catch((err)=>console.log(err))
+            })
+    })
+
+        /* window.addEventListener("load",function(event){
+            function sendData(){
+                const xhr = new XMLHttpRequest();
+                const fd = new FormData(form);
+                xhr.addEventListener("load",function(event){
+                    console.log(event.target.resposeText)
+                })
+                xhr.addEventListener("error",function(event){
+                    console.log("errrrr!")
+                })
+                xhr.open("POST","http://localhost:9000")
+                xhr.send(fd)
+            }
+            const form =document.getElementById("myform")
+            form.addEventListener('submit',function(event){
+                event.preventDefault();
+                sendData()
+            })
+        })
+    */
+    </script>
+</body>
+</html>
+
